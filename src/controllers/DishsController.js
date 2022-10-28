@@ -25,11 +25,11 @@ class DishsController {
 
       await knex("ingredients").insert(ingredientsInsert);
 
-      return response.json();
+      return response.status(201).json();
    }
 
    async update(request, response) {
-      const { title, description, price, img, ingredients, name } = request.body;
+      const { title, description, price, img, ingredients } = request.body;
       const { id } = request.params;
 
       const dishs = await knex("dishs").where({ id }).first();
@@ -42,12 +42,28 @@ class DishsController {
       dishs.description = description ?? dishs.description;
       dishs.img = img ?? dishs.img;
       dishs.price = price ?? dishs.price;
-
-      await knex("dishs").where({ id }).update(dishs)
-      await knex("dishs").where({ id }).update("update_at", knex.fn.now())
-
-      return response.status(201).json("Prato atualizado com sucesso!")
       
+      const checkOnlyOneIngredient = typeof(ingredients) === "string";
+
+        let ingredientsInsert
+        if (checkOnlyOneIngredient) {
+          ingredientsInsert = {
+            dish_id: dishs.id,
+            name: ingredients
+          }
+        } else if (ingredients.length >= 1) {
+          ingredientsInsert = ingredients.map(ingredient => {
+            return {
+              dish_id: dishs.id,
+              name : ingredient
+            }
+          })
+
+          await knex("ingredients").where({ dish_id: id}).insert(ingredientsInsert)
+
+         }   
+
+     return response.status(201).json("Prato atualizado com sucesso!")    
    }
 
    async delete(request, response) {
