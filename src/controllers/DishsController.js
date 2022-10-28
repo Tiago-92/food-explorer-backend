@@ -1,9 +1,10 @@
+const AppError = require("../../../../FoodExplorer_BackEnd/src/utils/AppError");
 const knex = require("../database/knex");
 
 class DishsController {
    async create(request, response) {
       const { title, description, price, img, adm, ingredients } = request.body;
-      const { user_id } = request.params;
+      const user_id = request.user.id
 
       const dish_id = await knex("dishs").insert({
          title,
@@ -28,17 +29,25 @@ class DishsController {
    }
 
    async update(request, response) {
-      const { title, description, price, img } = request.body;
+      const { title, description, price, img, ingredients, name } = request.body;
       const { id } = request.params;
 
-      await knex("dishs").where({ id }).update({
-         title,
-         description,
-         price,
-         img
-      });
+      const dishs = await knex("dishs").where({ id }).first();
 
-      return response.json();
+      if(!dishs) {
+         throw new AppError("O prato que você está tentando atualizar não existe!")
+      }
+      // comparar campos do banco com o que é preciso atualizar
+      dishs.title = title ?? dishs.title;
+      dishs.description = description ?? dishs.description;
+      dishs.img = img ?? dishs.img;
+      dishs.price = price ?? dishs.price;
+
+      await knex("dishs").where({ id }).update(dishs)
+      await knex("dishs").where({ id }).update("update_at", knex.fn.now())
+
+      return response.status(201).json("Prato atualizado com sucesso!")
+      
    }
 
    async delete(request, response) {
@@ -51,11 +60,10 @@ class DishsController {
 
    async index(request, response) {
       const { title, user_id, ingredients } = request.query;
-
       let dishs;
 
       if (ingredients) {
-         const filterIngredients = ingredients.split(',').map(ingredient => ingredient);
+         const filterIngredients = ingredients.split(',').map(ingredient => ingredient.trim());
 
          dishs = await knex("ingredients")
          .select([
