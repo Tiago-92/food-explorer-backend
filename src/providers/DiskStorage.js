@@ -3,8 +3,9 @@ const path = require("path");
 const uploadConfig = require("../configs/upload");
 
 class diskStorage {
-   async saveFile(file) { // mover arquivo de img para outra pasta
+   async saveFile(file) {
       await fs.promises.rename(
+         // mover arquivo de img para outra pasta
          path.resolve(uploadConfig.TMP_FOLDER, file),
          path.resolve(uploadConfig.UPLOADS_FOLDER, file)
       );

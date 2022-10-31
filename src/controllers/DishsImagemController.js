@@ -1,26 +1,33 @@
 const knex = require("../database/knex");
+
+const AppError = require("../utils/AppError");
+
 const DiskStorage = require("../providers/DiskStorage");
 
 class DishsImagemController {
-   async update (request, response) {
-      const { id } = request.body;
-      const avatarFilename = request.file.filename;
+   async update(request, response) {
+      const { id } = request.params;
+      const imageFilename = request.file.filename;
 
       const diskStorage = new DiskStorage();
 
-      const user = knex("dishs")
-      .where({ id }).first();
+      const dishs = await knex("dishs").where({ id }).first();
 
-      if (user.avatar) {
-         await diskStorage.deleteFile(user.avatar)
+      if(!dishs) {
+         throw new AppError("Esse prato não existe.")
       }
 
-      const filename = await diskStorage.saveFile(avatarFilename);
-      user.avatar = filename;
+      // excluir a imagem a antinga, para atualizar com a nova
+      if(dishs.img) {
+         await diskStorage.deleteFile(dishs.img)
+      }
 
-      await knex("dishs").update(user).where({ id });
+      const filename = await diskStorage.saveFile(imageFilename);
+      dishs.img = filename
 
-      return response.json(user)
+      await knex("dishs").update(dishs).where({ id });
+
+      return response.json(dishs)
    }
 }
 
