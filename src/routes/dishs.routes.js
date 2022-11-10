@@ -5,7 +5,7 @@ const multer = require("multer");
 const uploadConfig = require("../configs/upload");
 
 const DishsController = require("../controllers/DishsController");
-
+const DishsAdmController = require("../controllers/DishsAdmController");
 const DishsImagemController = require("../controllers/DishsImagemController");
 
 const ensureAuthenticated = require("../middlewares/ensureAuthenticated");
@@ -15,6 +15,7 @@ dishsRouter.use(ensureAuthenticated);
 
 const upload = multer(uploadConfig.MULTER);
 
+const dishsAdmController = new DishsAdmController();
 const dishsController = new DishsController();
 const dishsImagemController = new DishsImagemController();
 
@@ -25,9 +26,9 @@ function checkUserIsAdm(req, resp, next) {
    next();
 }
 
-dishsRouter.post("/", checkUserIsAdm, dishsController.create);
-dishsRouter.put("/:id", checkUserIsAdm, dishsController.update);
-dishsRouter.delete("/:id", checkUserIsAdm, dishsController.delete);
+dishsRouter.post("/", checkUserIsAdm, dishsAdmController.create);
+dishsRouter.put("/:id", checkUserIsAdm, dishsAdmController.update);
+dishsRouter.delete("/:id", checkUserIsAdm, dishsAdmController.delete);
 dishsRouter.get("/", dishsController.index);
 dishsRouter.patch("/dishimage/:id", ensureAuthenticated, upload.single("avatar"), dishsImagemController.update);
 
