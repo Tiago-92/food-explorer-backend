@@ -5,7 +5,7 @@ const knex = require("../database/knex");
 
 class MyOrderController {
    async create(request, response) {
-      const { id } = request.params;
+      const { id } = request.query;
 
       const database = await sqliteConnection();
 

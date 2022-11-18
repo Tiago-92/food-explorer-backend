@@ -26,10 +26,11 @@ function checkUserIsAdm(req, resp, next) {
    next();
 }
 
-dishsRouter.post("/", checkUserIsAdm, dishsAdmController.create);
+dishsRouter.post("/", dishsAdmController.create);
 dishsRouter.put("/:id", checkUserIsAdm, dishsAdmController.update);
 dishsRouter.delete("/:id", checkUserIsAdm, dishsAdmController.delete);
 dishsRouter.get("/", dishsController.index);
+dishsRouter.get("/:id", dishsController.show);
 dishsRouter.patch("/dishimage/:id", ensureAuthenticated, upload.single("avatar"), dishsImagemController.update);
 
 module.exports = dishsRouter;

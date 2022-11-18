@@ -4,7 +4,7 @@ const knex = require("../database/knex");
 class DishsController {
    
    async index(request, response) {
-      const { title, user_id, ingredients } = request.query;
+      const { title, ingredients } = request.query;
       let dishs;
 
       if (ingredients) {
@@ -14,9 +14,9 @@ class DishsController {
          .select([
             "dishs.id",
             "dishs.title",
-            "dishs.user_id"
+            "dishs.price",
+            
          ])
-         .where("dishs.user_id", user_id )
          .whereLike("dishs.title", `%${title}%`)
          .whereIn("name", filterIngredients)
          .innerJoin("dishs", "dishs.id", "ingredients.dish_id")
@@ -24,14 +24,13 @@ class DishsController {
 
       } else {
          dishs = await knex("dishs")
-         .where({ user_id })
          .whereLike("title", `%${title}%`)
          .orderBy("title")
       }
 
-      const userIngredients = await knex("ingredients").where({ user_id });
+      const dishesIngredients = await knex("ingredients")
       const dishsWithIngredients = dishs.map(dish => {
-         const dishIngredients = userIngredients.filter(ingredients => ingredients.dish_id === dish.id);
+         const dishIngredients = dishesIngredients.filter(ingredients => ingredients.dish_id === dish.id);
 
          return {
             ...dish,
@@ -41,6 +40,14 @@ class DishsController {
 
       return response.json(dishsWithIngredients);
    }
+
+   async show (request, response) {
+      const { id } = request.params;
+
+      const data = await knex("dishs").where({ id }).first();
+
+      return response.json({ data });
+  }
 }
 
 module.exports = DishsController;

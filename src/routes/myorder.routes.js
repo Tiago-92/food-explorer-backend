@@ -6,7 +6,7 @@ const myorderRouter = Router();
 
 const myorderController = new MyOrderController();
 
-myorderRouter.post("/:id", myorderController.create);
+myorderRouter.post("/", myorderController.create);
 myorderRouter.delete("/:id", myorderController.delete);
 
 module.exports = myorderRouter;
