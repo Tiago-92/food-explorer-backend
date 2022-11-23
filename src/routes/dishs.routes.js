@@ -26,7 +26,7 @@ function checkUserIsAdm(req, resp, next) {
    next();
 }
 
-dishsRouter.post("/", dishsAdmController.create);
+dishsRouter.post("/", upload.single("img"), dishsAdmController.create);
 dishsRouter.put("/:id", checkUserIsAdm, dishsAdmController.update);
 dishsRouter.delete("/:id", checkUserIsAdm, dishsAdmController.delete);
 dishsRouter.get("/", dishsController.index);

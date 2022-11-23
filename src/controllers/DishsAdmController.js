@@ -1,16 +1,22 @@
 const AppError = require("../../../../FoodExplorer_BackEnd/src/utils/AppError");
 const knex = require("../database/knex");
+const DiskStorage = require("../providers/DiskStorage");
 
  class DishsAdmController {
    async create(request, response) {
-      const { title, description, price, img, adm, ingredients } = request.body;
+      const { title, description, price, adm, ingredients } = request.body;
       const user_id = request.user.id
+      const imageFilename = request.file.filename;
+
+      const diskStorage = new DiskStorage();
+
+      const filename = await diskStorage.saveFile(imageFilename);
 
       const dish_id = await knex("dishs").insert({
          title,
          description,
          price,
-         img,
+         img: filename,
          adm,
          user_id
       });
@@ -24,7 +30,8 @@ const knex = require("../database/knex");
       });
 
       await knex("ingredients").insert(ingredientsInsert);
-
+  
+  
       return response.status(201).json();
    }
 
