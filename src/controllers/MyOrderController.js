@@ -6,16 +6,16 @@ const knex = require("../database/knex");
 class MyOrderController {
    async create(request, response) {
       const { id } = request.query;
+      const { quantity } = request.body;
 
-      const database = await sqliteConnection();
+      const db = await knex.from(knex.raw('?? (??, ??, ??, ??, ??)', ['myorder', 'dish_id', 'dish_img', 'dish_title', 'dish_price', 'quantity']))
+      .insert(function() {
+         this.from('dishs')
+         .where({ id })
+         .select('id', 'img', 'title', 'price', quantity)
+      });
 
-      await database.run(
-         // inserir dados de "id", "img", title" e "price" na tabela "myorder" a partir  
-         // da tabela "dishs", usar como parâmetro o id do prato
-         "INSERT INTO myorder (dish_id, dish_img, dish_title, dish_price) SELECT id, img, title, price FROM dishs WHERE id = (?)", [id],
-      );
-      
-      return response.status(201).json();
+      return response.status(201).json(db);
    }
 
    async delete(request, response) {
