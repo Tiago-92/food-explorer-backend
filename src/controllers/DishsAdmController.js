@@ -4,7 +4,7 @@ const DiskStorage = require("../providers/DiskStorage");
 
  class DishsAdmController {
    async create(request, response) {
-      const { title, description, price, adm, ingredients } = request.body;
+      const { title, description, category, price, adm, ingredients } = request.body;
       const user_id = request.user.id
       const imageFilename = request.file.filename;
 
@@ -15,6 +15,7 @@ const DiskStorage = require("../providers/DiskStorage");
       const dish_id = await knex("dishs").insert({
          title,
          description,
+         category,
          price,
          img: filename,
          adm,
@@ -65,7 +66,7 @@ const DiskStorage = require("../providers/DiskStorage");
               name : ingredient
             }
           })
-          // estudando uma forma de usar updtate, pessoal da Rocket, me da uma luz?? kkkk
+
           await knex("ingredients").where({ dish_id: id}).delete(ingredientsInsert)
           await knex("ingredients").where({ dish_id: id}).insert(ingredientsInsert)
          }   

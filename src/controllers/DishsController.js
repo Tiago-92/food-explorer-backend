@@ -44,9 +44,13 @@ class DishsController {
    async show (request, response) {
       const { id } = request.params;
 
-      const data = await knex("dishs").where({ id }).first();
+      const dish = await knex("dishs").where({ id }).first();
+      const ingredients = await knex("ingredients").where({ dish_id: id }).orderBy("name");
 
-      return response.json({ data });
+      return response.json({
+         ...dish,
+         ingredients 
+      });
   }
 }
 

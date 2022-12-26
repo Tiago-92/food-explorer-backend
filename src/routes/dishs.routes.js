@@ -19,16 +19,9 @@ const dishsAdmController = new DishsAdmController();
 const dishsController = new DishsController();
 const dishsImagemController = new DishsImagemController();
 
-function checkUserIsAdm(req, resp, next) {
-   if(!req.body.adm || req.body.adm === null) {
-      return resp.json({ message: "Somente o usuário administrador têm permissão para cadastrar ou editar um prato!"})
-   }
-   next();
-}
-
 dishsRouter.post("/", upload.single("img"), dishsAdmController.create);
-dishsRouter.put("/:id", checkUserIsAdm, dishsAdmController.update);
-dishsRouter.delete("/:id", checkUserIsAdm, dishsAdmController.delete);
+dishsRouter.put("/:id", dishsAdmController.update);
+dishsRouter.delete("/:id", dishsAdmController.delete);
 dishsRouter.get("/", dishsController.index);
 dishsRouter.get("/:id", dishsController.show);
 dishsRouter.patch("/dishimage/:id", ensureAuthenticated, upload.single("avatar"), dishsImagemController.update);
