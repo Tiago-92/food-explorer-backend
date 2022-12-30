@@ -24,6 +24,6 @@ dishsRouter.put("/:id", dishsAdmController.update);
 dishsRouter.delete("/:id", dishsAdmController.delete);
 dishsRouter.get("/", dishsController.index);
 dishsRouter.get("/:id", dishsController.show);
-dishsRouter.patch("/dishimage/:id", ensureAuthenticated, upload.single("avatar"), dishsImagemController.update);
+dishsRouter.patch("/dishimage/:id", upload.single("img"), dishsImagemController.update);
 
 module.exports = dishsRouter;

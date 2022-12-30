@@ -15,6 +15,6 @@ const ingredientsRouter = Router();
 const ingredientsController = new IngredientsController();
 
 ingredientsRouter.get("/", ingredientsController.index);
-ingredientsRouter.patch("/:id", ensureAuthenticated, upload.single("img"), ingredientsController.update);
+ingredientsRouter.patch("/:id", upload.single("img"), ingredientsController.update);
 
 module.exports = ingredientsRouter;

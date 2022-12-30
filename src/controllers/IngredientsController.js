@@ -3,9 +3,8 @@ const knex = require("../database/knex");
 const DiskStorage = require("../providers/DiskStorage");
 class IngredientsController {
    async index(request, response) {
-      const name = request.query;
 
-      const ingredients = await knex("ingredients").where({ name });
+      const ingredients = await knex("ingredients");
 
       return response.json(ingredients);
    }

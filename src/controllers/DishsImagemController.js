@@ -17,7 +17,7 @@ class DishsImagemController {
          throw new AppError("Esse prato não existe.")
       }
 
-      // excluir a imagem a antinga, para atualizar com a nova
+      // excluir a imagem a antiga, para atualizar com a nova
       if(dishs.img) {
          await diskStorage.deleteFile(dishs.img)
       }
