@@ -1,4 +1,4 @@
-const AppError = require("../../../../FoodExplorer_BackEnd/src/utils/AppError");
+const AppError = require("../utils/AppError");
 const knex = require("../database/knex");
 const DiskStorage = require("../providers/DiskStorage");
 
