@@ -1,5 +1,4 @@
 const knex = require("../database/knex");
-
 class DishsController {
    
    async index(request, response) {
