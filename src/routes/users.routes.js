@@ -13,5 +13,6 @@ const upload = multer(uploadConfig.MULTER);
 const usersController = new UsersController();
 
 usersRouter.post("/", usersController.create);
+usersRouter.delete("/:id", usersController.delete);
 
 module.exports = usersRouter;
