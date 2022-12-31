@@ -1,4 +1,3 @@
-const AppError = require("../../../../FoodExplorer_BackEnd/src/utils/AppError");
 const knex = require("../database/knex");
 
 class DishsController {
