@@ -16,6 +16,7 @@ class CartController {
    }
 
    async delete(request, response) {
+      const { id } = request.params;
 
       await knex("cart").where({ id }).delete();
 
